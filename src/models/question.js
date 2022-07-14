@@ -19,17 +19,14 @@ const quesSchema = new mongoose.Schema({
         option_title:String
     }],
     correctOption: Number,
-    tokens: [{
-        token:String
-    }]
 })
 
 //GENERATING TOKENS
 quesSchema.methods.generateAuthToken = async function(){
     try{
         const token = jwt.sign({_id:this._id.toString()}, "unnatmittalqwertyuiopasdfghjklzxcvbnm");
-        this.tokens = this.tokens.concat({token:token})
-        await this.save();
+        // this.tokens = this.tokens.concat({token:token})
+        // await this.save();
         console.log(token);
         return token
     }

@@ -1,0 +1,97 @@
+A Backend System using NodeJS and MongoDB
+
+DB Details:
+   Database Name : ContentDB
+   Collection Name : Questions
+   Collection Fields:
+        ID string
+        Title string
+        Description string
+        Options [{
+            sequence : int,
+            option_title : string
+        }, {
+            sequence : int,
+            option_title : string
+        }, {
+            sequence : int,
+            option_title : string
+        }, {
+            sequence : int,
+            option_title : string
+        }]
+        CorrectOption int
+
+
+RESTful APIs:
+    1. Insert data in question collection
+    2. List all data from question collection with pagination
+    3. Update data in question collection
+    4. Delete data from question collection
+
+INSERTION
+
+    app.post("/questions", async (req, res) => {
+        try{
+            const ques = new Question(req.body);
+            const token = await ques.generateAuthToken();
+            console.log(token);
+            const createQues=await ques.save();
+            res.status(201).send(createQues);
+        }
+        catch(e){
+            res.status(400).send(e);
+        }    
+    })
+
+    -To add any collection
+    POST request on localhost:3000/questions with collection in the body
+
+
+READ ALL DATA
+
+    app.get("/questions", async(req, res) => {
+        try{
+            const quesData = await Question.find();
+            res.send(quesData);
+        }
+        catch(e){
+            res.send(e);
+        }
+    })
+
+    -To read all the data in DB 
+    GET request on localhost:3000/questions
+
+UPDATION IN COLLECTION
+
+    app.patch("/questions/:id", async (req, res) => {
+        try{
+            const _id = req.params.id;
+            const updateQues = await Question.findByIdAndUpdate(_id, req.body);
+            res.send(updateQues);
+        }
+        catch(e){
+            res.status(400).send(e);
+        }
+    })
+
+    -To update any collection
+    PATCH request on localhost:3000/questions/{_id} with the updation details in body
+
+
+DELETION OF COLLECTION
+
+    app.delete("/questions/:id", async (req, res) => {
+        try{
+            const delQues = await Question.findByIdAndDelete(req.params.id);
+            if(!req.params.id)return res.status(400).send();
+            res.send(delQues);
+        }
+        catch(e){
+            res.status(500).send(e);
+        }
+    })
+
+    -To delete any collection
+    DELETE request on localhost:3000/questions/{_id}

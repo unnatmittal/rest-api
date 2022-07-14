@@ -30,6 +30,9 @@ app.post("/questions", async (req, res) => {
         const token = await ques.generateAuthToken();
         console.log(token);
 
+        // res.cookie("jwt", token);
+        // console.log(cookie);
+
         const createQues=await ques.save();
         res.status(201).send(createQues);    
     }
